@@ -6,14 +6,11 @@ namespace Win11PaintClone
 {
     public static class DrawingHelper
     {
-        // Algoritmo de Flood Fill (Balde de Tinta)
         public static void FloodFill(Bitmap bitmap, Point pt, Color targetColor, Color replacementColor)
         {
             if (targetColor.ToArgb() == replacementColor.ToArgb()) return;
-
             Stack<Point> pixels = new Stack<Point>();
             pixels.Push(pt);
-
             while (pixels.Count > 0)
             {
                 Point a = pixels.Pop();
@@ -31,7 +28,6 @@ namespace Win11PaintClone
             }
         }
 
-        // Desenha uma Estrela de 5 pontas
         public static void DrawStar(Graphics g, Pen pen, Rectangle rect)
         {
             PointF[] points = new PointF[10];
@@ -40,8 +36,6 @@ namespace Win11PaintClone
             float cx = rect.X + rect.Width / 2f;
             float cy = rect.Y + rect.Height / 2f;
             float rx = rect.Width / 2f;
-            float ry = rect.Height / 2f;
-
             for (int i = 0; i < 10; i++)
             {
                 float r = (i % 2 == 0) ? rx : rx * 0.4f;
@@ -51,7 +45,6 @@ namespace Win11PaintClone
             g.DrawPolygon(pen, points);
         }
 
-        // Desenha uma Seta
         public static void DrawArrow(Graphics g, Pen pen, Point start, Point end)
         {
             float headLength = 15f;
@@ -59,6 +52,22 @@ namespace Win11PaintClone
             g.DrawLine(pen, start, end);
             g.DrawLine(pen, end, new Point((int)(end.X - headLength * Math.Cos(angle - Math.PI / 6)), (int)(end.Y - headLength * Math.Sin(angle - Math.PI / 6))));
             g.DrawLine(pen, end, new Point((int)(end.X - headLength * Math.Cos(angle + Math.PI / 6)), (int)(end.Y - headLength * Math.Sin(angle + Math.PI / 6))));
+        }
+
+        public static void DrawPolygon(Graphics g, Pen pen, Rectangle rect, int sides)
+        {
+            PointF[] points = new PointF[sides];
+            float radiusX = rect.Width / 2f;
+            float radiusY = rect.Height / 2f;
+            float centerX = rect.X + radiusX;
+            float centerY = rect.Y + radiusY;
+            double angle = -Math.PI / 2;
+            for (int i = 0; i < sides; i++)
+            {
+                points[i] = new PointF(centerX + (float)(radiusX * Math.Cos(angle)), centerY + (float)(radiusY * Math.Sin(angle)));
+                angle += 2 * Math.PI / sides;
+            }
+            g.DrawPolygon(pen, points);
         }
     }
 }
